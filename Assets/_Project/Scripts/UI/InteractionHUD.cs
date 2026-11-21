@@ -8,11 +8,15 @@ namespace Blackstone.UI
     /// - ponto de mira no centro, que cresce ao mirar algo interativo;
     /// - nome do objeto e a ação ("[E] Examinar");
     /// - mensagem na parte de baixo da tela, que some sozinha.
-    /// Será trocado por uma UI definitiva na fase de arte.
+    /// O texto tem tamanho mínimo para continuar legível em janelas pequenas
+    /// (como a aba Game do Editor). Será trocado por uma UI definitiva na fase de arte.
     /// </summary>
     [RequireComponent(typeof(Interactor))]
     public class InteractionHUD : MonoBehaviour
     {
+        // Escala mínima: abaixo disso o texto ficaria ilegível.
+        private const float MinScale = 0.85f;
+
         private Interactor interactor;
         private GUIStyle nameStyle;
         private GUIStyle promptStyle;
@@ -28,7 +32,7 @@ namespace Blackstone.UI
             if (interactor == null) return;
             EnsureStyles();
 
-            float scale = Screen.height / 1080f;
+            float scale = Mathf.Max(Screen.height / 1080f, MinScale);
             float cx = Screen.width / 2f;
             float cy = Screen.height / 2f;
             var target = interactor.Current;
@@ -44,24 +48,28 @@ namespace Blackstone.UI
             {
                 nameStyle.fontSize = Mathf.RoundToInt(24 * scale);
                 promptStyle.fontSize = Mathf.RoundToInt(18 * scale);
-                float w = 600f * scale;
+                float w = Mathf.Min(700f * scale, Screen.width * 0.9f);
                 ShadowLabel(new Rect(cx - w / 2f, cy + 24f * scale, w, 34f * scale), target.DisplayName, nameStyle);
                 ShadowLabel(new Rect(cx - w / 2f, cy + 56f * scale, w, 28f * scale), $"[E] {target.Prompt}", promptStyle);
             }
 
-            // Mensagem
+            // Mensagem (altura se ajusta ao tamanho do texto)
             if (interactor.MessageTimeLeft > 0f && !string.IsNullOrEmpty(interactor.Message))
             {
                 float alpha = Mathf.Clamp01(interactor.MessageTimeLeft / 0.5f);
-                messageStyle.fontSize = Mathf.RoundToInt(22 * scale);
-                float w = Mathf.Min(900f * scale, Screen.width * 0.9f);
-                float h = 90f * scale;
-                var box = new Rect(cx - w / 2f, Screen.height - h - 60f * scale, w, h);
+                messageStyle.fontSize = Mathf.RoundToInt(24 * scale);
 
-                GUI.color = new Color(0f, 0f, 0f, 0.6f * alpha);
+                float w = Mathf.Min(1000f * scale, Screen.width * 0.92f);
+                float pad = 20f * scale;
+                var content = new GUIContent(interactor.Message);
+                float textHeight = messageStyle.CalcHeight(content, w - pad * 2f);
+                float h = textHeight + pad * 2f;
+                var box = new Rect(cx - w / 2f, Screen.height - h - 50f * scale, w, h);
+
+                GUI.color = new Color(0f, 0f, 0f, 0.72f * alpha);
                 GUI.DrawTexture(box, Texture2D.whiteTexture);
                 GUI.color = new Color(1f, 1f, 1f, alpha);
-                GUI.Label(new Rect(box.x + 20f * scale, box.y, box.width - 40f * scale, box.height), interactor.Message, messageStyle);
+                GUI.Label(new Rect(box.x + pad, box.y + pad, box.width - pad * 2f, textHeight), content, messageStyle);
             }
 
             GUI.color = Color.white;
@@ -73,7 +81,13 @@ namespace Blackstone.UI
 
             nameStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             promptStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-            messageStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
+            messageStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.UpperCenter,
+                wordWrap = true,
+                richText = false,
+                clipping = TextClipping.Overflow
+            };
             nameStyle.normal.textColor = Color.white;
             promptStyle.normal.textColor = new Color(0.85f, 0.85f, 0.85f);
             messageStyle.normal.textColor = Color.white;

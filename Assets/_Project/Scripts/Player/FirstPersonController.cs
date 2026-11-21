@@ -1,12 +1,14 @@
+using Blackstone.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Blackstone.Player
 {
     /// <summary>
-    /// Controle em primeira pessoa da Build 001:
+    /// Controle em primeira pessoa:
     /// WASD para andar, Shift para andar mais rápido, mouse para olhar.
     /// O cursor fica preso na tela; clicar na janela prende de novo se ele soltar.
+    /// Fica parado enquanto alguma tela (InputLock) estiver aberta.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public class FirstPersonController : MonoBehaviour
@@ -52,14 +54,13 @@ namespace Blackstone.Player
 
         private void Update()
         {
-            // Se o cursor soltou (Alt+Tab, por exemplo), um clique prende de novo.
             var mouse = Mouse.current;
             if (Cursor.lockState != CursorLockMode.Locked && mouse != null && mouse.leftButton.wasPressedThisFrame)
             {
                 SetCursorLocked(true);
             }
 
-            if (Cursor.lockState == CursorLockMode.Locked)
+            if (Cursor.lockState == CursorLockMode.Locked && !InputLock.Blocked)
             {
                 Look();
             }
@@ -74,10 +75,8 @@ namespace Blackstone.Player
 
             Vector2 delta = mouse.delta.ReadValue() * mouseSensitivity;
 
-            // Esquerda/direita gira o corpo inteiro.
             transform.Rotate(Vector3.up, delta.x, Space.Self);
 
-            // Cima/baixo gira só a cabeça (cameraRoot), com limite.
             pitch = Mathf.Clamp(pitch - delta.y, minPitch, maxPitch);
             if (cameraRoot != null)
             {
@@ -91,7 +90,7 @@ namespace Blackstone.Player
             Vector2 input = Vector2.zero;
             bool sprinting = false;
 
-            if (keyboard != null)
+            if (keyboard != null && !InputLock.Blocked)
             {
                 if (keyboard.wKey.isPressed) input.y += 1f;
                 if (keyboard.sKey.isPressed) input.y -= 1f;
@@ -106,7 +105,6 @@ namespace Blackstone.Player
             Vector3 targetVelocity = (transform.right * input.x + transform.forward * input.y) * speed;
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, acceleration * Time.deltaTime);
 
-            // Gravidade simples para manter o jogador no chão.
             if (controller.isGrounded && verticalVelocity < 0f)
             {
                 verticalVelocity = -2f;
