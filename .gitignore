@@ -1,0 +1,56 @@
+# ===== Unity: pastas geradas automaticamente =====
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Gerado pelo Asset Store Tools
+/[Aa]ssets/AssetStoreTools*
+
+# Cache do Gradle / Android (caso use no futuro)
+.gradle/
+
+# ===== IDEs (Visual Studio, VS Code, Rider) =====
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+ExportedObj/
+.consulo/
+sysinfo.txt
+
+# ===== Debug e crash =====
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+crashlytics-build.properties
+
+# ===== Builds geradas =====
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# ===== Sistema operacional =====
+.DS_Store
+Thumbs.db
+Desktop.ini
