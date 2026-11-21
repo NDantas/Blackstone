@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 29774800}
+  - component: {fileID: 29774801}
   m_Layer: 0
   m_Name: Grade
   m_TagString: Untagged
@@ -170,6 +171,23 @@ Transform:
   - {fileID: 1970762594}
   m_Father: {fileID: 605360133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &29774801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29774799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: Grade
+  prompt: Examinar
+  descriptions:
+  - "Barras de a\xE7o grossas. Nenhuma se mexe."
+  - "A tranca fica do lado de fora, fora do alcance da m\xE3o."
 --- !u!1 &30558971
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +637,7 @@ GameObject:
   - component: {fileID: 332467775}
   - component: {fileID: 332467774}
   - component: {fileID: 332467773}
+  - component: {fileID: 332467776}
   m_Layer: 0
   m_Name: Pia
   m_TagString: Untagged
@@ -719,6 +738,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 332467771}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &332467776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332467771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: Pia
+  prompt: Examinar
+  descriptions:
+  - "Pia de a\xE7o inox. A torneira pinga sem parar."
 --- !u!1 &339014663
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1153,7 @@ GameObject:
   - component: {fileID: 589193681}
   - component: {fileID: 589193680}
   - component: {fileID: 589193679}
+  - component: {fileID: 589193682}
   m_Layer: 0
   m_Name: Luminaria
   m_TagString: Untagged
@@ -1218,6 +1254,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589193677}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &589193682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589193677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: "Lumin\xE1ria"
+  prompt: Examinar
+  descriptions:
+  - "L\xE2mpada protegida por uma tela de metal. Ela zumbe baixinho."
 --- !u!1 &590296505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,6 +1281,8 @@ GameObject:
   - component: {fileID: 590296508}
   - component: {fileID: 590296507}
   - component: {fileID: 590296506}
+  - component: {fileID: 590296510}
+  - component: {fileID: 590296509}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1297,6 +1351,36 @@ Transform:
   - {fileID: 143860705}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &590296509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590296505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f382904fa1cf3744a9c4bcd6a53cc6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.UI.InteractionHUD
+--- !u!114 &590296510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590296505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f9db84f94f5e44784dc31618eb7e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.Interactor
+  cameraTransform: {fileID: 330585546}
+  range: 2
+  interactionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  messageDuration: 4
 --- !u!1 &605360132
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,6 +1653,7 @@ GameObject:
   - component: {fileID: 677291071}
   - component: {fileID: 677291070}
   - component: {fileID: 677291069}
+  - component: {fileID: 677291072}
   m_Layer: 0
   m_Name: Vaso
   m_TagString: Untagged
@@ -1669,6 +1754,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677291067}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &677291072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677291067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: "Vaso sanit\xE1rio"
+  prompt: Examinar
+  descriptions:
+  - "A\xE7o inox, sem tampa. Nada de \xFAtil aqui."
 --- !u!1 &734706686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2066,6 +2167,7 @@ GameObject:
   - component: {fileID: 871243139}
   - component: {fileID: 871243138}
   - component: {fileID: 871243137}
+  - component: {fileID: 871243140}
   m_Layer: 0
   m_Name: Cama
   m_TagString: Untagged
@@ -2166,6 +2268,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 871243135}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &871243140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 871243135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: Cama
+  prompt: Examinar
+  descriptions:
+  - "Estrutura de metal parafusada no ch\xE3o."
+  - "Os parafusos est\xE3o firmes. Quase todos."
 --- !u!1 &922948591
 GameObject:
   m_ObjectHideFlags: 0
@@ -3313,6 +3432,7 @@ GameObject:
   - component: {fileID: 1672349906}
   - component: {fileID: 1672349905}
   - component: {fileID: 1672349904}
+  - component: {fileID: 1672349907}
   m_Layer: 0
   m_Name: Colchao
   m_TagString: Untagged
@@ -3413,6 +3533,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672349902}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1672349907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672349902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: "Colch\xE3o"
+  prompt: Examinar
+  descriptions:
+  - "Colch\xE3o fino. Cheira a mofo."
+  - "Num dos cantos, a costura foi refeita \xE0 m\xE3o."
 --- !u!1 &1678702460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4392,6 +4529,7 @@ GameObject:
   - component: {fileID: 2079968081}
   - component: {fileID: 2079968080}
   - component: {fileID: 2079968079}
+  - component: {fileID: 2079968082}
   m_Layer: 0
   m_Name: Parede_Fundo
   m_TagString: Untagged
@@ -4492,6 +4630,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079968077}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2079968082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079968077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bcbc192a6ddc54ab8b23cb72156787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blackstone.Interaction.InspectableObject
+  displayName: Parede
+  prompt: Examinar
+  descriptions:
+  - "Concreto frio e \xFAmido."
+  - "Algu\xE9m riscou marcas aqui. Grupos de cinco. Muitos grupos."
 --- !u!1 &2085013555
 GameObject:
   m_ObjectHideFlags: 0
