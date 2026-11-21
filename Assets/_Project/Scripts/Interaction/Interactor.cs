@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Blackstone.Core;
 using UnityEngine;
@@ -10,15 +11,18 @@ namespace Blackstone.Interaction
     /// e aciona a interação com E. Também guarda a mensagem atual que o HUD exibe.
     ///
     /// Mira:
-    /// 1) Raio fino a partir do centro da tela (precisão).
-    /// 2) Se o raio não achar nada interativo, usa um "raio grosso" (SphereCast)
-    ///    como ajuda de mira, sem atravessar paredes.
+    /// 1) Raio fino a partir do centro da tela.
+    /// 2) Se não achar nada, um "raio grosso" (ajuda de mira), sem atravessar paredes.
+    /// - Colliders marcados com SeeThrough (barras) deixam a mira passar.
+    /// - Interativos com IRangedInteractable (ex.: NPCs) podem ser alcançados de mais longe.
     /// O objeto em foco fica levemente iluminado.
     /// </summary>
     public class Interactor : MonoBehaviour
     {
+        private const float MaxQueryDistance = 8f;
+
         [SerializeField] private Transform cameraTransform;
-        [Tooltip("Distância máxima (m) para interagir.")]
+        [Tooltip("Distância máxima (m) para interagir com objetos comuns.")]
         [SerializeField] private float range = 2.5f;
         [Tooltip("Raio (m) da ajuda de mira.")]
         [SerializeField] private float aimAssistRadius = 0.12f;
@@ -39,6 +43,7 @@ namespace Blackstone.Interaction
         private readonly List<Renderer> highlightedRenderers = new List<Renderer>();
         private MaterialPropertyBlock block;
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly Comparison<RaycastHit> ByDistance = (a, b) => a.distance.CompareTo(b.distance);
 
         private void Awake()
         {
@@ -81,27 +86,65 @@ namespace Blackstone.Interaction
 
             Vector3 origin = cameraTransform.position;
             Vector3 direction = cameraTransform.forward;
-            float maxDistance = range;
 
             // 1) Raio fino
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, range, interactionMask, QueryTriggerInteraction.Ignore))
-            {
-                var interactable = Usable(hit.collider);
-                if (interactable != null) return interactable;
+            var hits = Physics.RaycastAll(origin, direction, MaxQueryDistance, interactionMask, QueryTriggerInteraction.Ignore);
+            if (Pick(hits, out IInteractable result, out float solidDistance)) return result;
 
-                // Algo não interativo na frente: a ajuda de mira não passa muito além dele.
-                maxDistance = Mathf.Min(range, hit.distance + 0.25f);
-            }
-
-            // 2) Ajuda de mira
-            if (aimAssistRadius > 0f &&
-                Physics.SphereCast(origin, aimAssistRadius, direction, out RaycastHit assistHit, maxDistance,
-                    interactionMask, QueryTriggerInteraction.Ignore))
+            // 2) Ajuda de mira (não passa muito além do primeiro obstáculo sólido)
+            if (aimAssistRadius > 0f)
             {
-                return Usable(assistHit.collider);
+                float maxDistance = Mathf.Min(MaxQueryDistance, solidDistance + 0.25f);
+                var assistHits = Physics.SphereCastAll(origin, aimAssistRadius, direction, maxDistance,
+                    interactionMask, QueryTriggerInteraction.Ignore);
+                if (Pick(assistHits, out result, out _)) return result;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Percorre os acertos do mais perto ao mais longe.
+        /// Barras (SeeThrough) são atravessadas, mas lembradas como candidatas.
+        /// O primeiro objeto sólido decide: se for interativo e estiver no alcance, é ele.
+        /// </summary>
+        private bool Pick(RaycastHit[] hits, out IInteractable result, out float solidDistance)
+        {
+            Array.Sort(hits, ByDistance);
+            result = null;
+            solidDistance = MaxQueryDistance;
+            IInteractable seeThroughCandidate = null;
+
+            foreach (var hit in hits)
+            {
+                // Ignora os colliders do próprio jogador.
+                if (hit.collider.transform.IsChildOf(transform)) continue;
+
+                var interactable = Usable(hit.collider);
+                bool inRange = interactable != null && hit.distance <= AllowedDistance(interactable);
+
+                if (hit.collider.GetComponent<SeeThrough>() != null)
+                {
+                    if (inRange && seeThroughCandidate == null) seeThroughCandidate = interactable;
+                    continue;
+                }
+
+                solidDistance = hit.distance;
+                if (inRange)
+                {
+                    result = interactable;
+                    return true;
+                }
+                break;
+            }
+
+            result = seeThroughCandidate;
+            return result != null;
+        }
+
+        private float AllowedDistance(IInteractable interactable)
+        {
+            return interactable is IRangedInteractable ranged ? Mathf.Max(range, ranged.MaxDistance) : range;
         }
 
         private IInteractable Usable(Collider collider)
